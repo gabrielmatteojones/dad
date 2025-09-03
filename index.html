@@ -104,38 +104,60 @@
 </header>
 
 <main>
-  <section class="hero">
-    <div class="container hero-grid">
-      <article class="card featured">
-        <div class="media" role="img"></div>
-        <div class="content">
-          <div class="eyebrow">In evidenza</div>
-          <h2 class="title">5 strategie efficaci per insegnare la grammatica</h2>
-          <p class="muted">Tecniche pratiche per lezioni più coinvolgenti.</p>
-          <a class="btn" href="#">Leggi l'articolo</a>
-        </div>
-      </article>
+<section class="hero">
+  <div class="container hero-grid">
+    
+    <!-- Post in evidenza -->
+    {% assign featured = site.posts | where: "featured", true | first %}
+    {% if featured %}
+    <article class="card featured">
+      <div class="media" role="img" style="background-image: url('{{ featured.image | relative_url }}');"></div>
+      <div class="content">
+        <div class="eyebrow">In evidenza</div>
+        <h2 class="title">{{ featured.title }}</h2>
+        <p class="muted">{{ featured.excerpt | strip_html | truncate: 120 }}</p>
+        <a class="btn" href="{{ featured.url | relative_url }}">Leggi l'articolo</a>
+      </div>
+    </article>
+    {% endif %}
 
-      <aside class="card pad">
-        <h3>Articoli recenti</h3>
-        <div class="recent-grid">
-          <div class="recent-card"><h4>Come incoraggiare la lettura in classe</h4><a href="#">Leggi</a></div>
-          <div class="recent-card"><h4>Le migliori attività di scrittura creativa</h4><a href="#">Leggi</a></div>
-          <div class="recent-card"><h4>Comprensione del testo: strategie rapide</h4><a href="#">Leggi</a></div>
-          <div class="recent-card"><h4>Valutazione senza voto: idee operative</h4><a href="#">Leggi</a></div>
+    <!-- Articoli recenti -->
+    <aside class="card pad">
+      <h3>Articoli recenti</h3>
+      <div class="recent-grid">
+        {% assign recent_posts = site.posts | where_exp: "post", "post.featured != true" | limit: 4 %}
+        {% for post in recent_posts %}
+        <div class="recent-card">
+          <h4>{{ post.title }}</h4>
+          <a href="{{ post.url | relative_url }}">Leggi</a>
         </div>
-      </aside>
-    </div>
+        {% endfor %}
+      </div>
+    </aside>
+  </div>
 
-    <div class="container cats" id="categorie">
-      <a class="cat" href="#"><span class="icon">A</span><div><strong>Grammatica</strong><br><span class="muted">Lingua italiana</span></div></a>
-      <a class="cat" href="#"><span class="icon">📖</span><div><strong>Letteratura</strong><br><span class="muted">Classici e letture</span></div></a>
-      <a class="cat" href="#"><span class="icon">✍️</span><div><strong>Lifestyle</strong><br><span class="muted">Benessere e organizzazione</span></div></a>
-      <a class="cat" href="#"><span class="icon">​👨‍💻​​</span><div><strong>Sezione Nerd</strong><br><span class="muted">Informatica e scienza nerd</span></div></a>
-      <a class="cat" href="#"><span class="icon">📌​</span><div><strong>Pedagogia</strong><br><span class="muted">Benessere e organizzazione</span></div></a>
-      <a class="cat" href="#"><span class="icon">​🧖‍♂️​​</span><div><strong>Biblioteconomia</strong><br><span class="muted">Biblioteca & studi di lettere</span></div></a>
-    </div>
-  </section>
+  <!-- Categorie (statiche) -->
+  <div class="container cats" id="categorie">
+    <a class="cat" href="#"><span class="icon">A</span>
+      <div><strong>Grammatica</strong><br><span class="muted">Lingua italiana</span></div>
+    </a>
+    <a class="cat" href="#"><span class="icon">📖</span>
+      <div><strong>Letteratura</strong><br><span class="muted">Classici e letture</span></div>
+    </a>
+    <a class="cat" href="#"><span class="icon">✍️</span>
+      <div><strong>Lifestyle</strong><br><span class="muted">Benessere e organizzazione</span></div>
+    </a>
+    <a class="cat" href="#"><span class="icon">👨‍💻</span>
+      <div><strong>Sezione Nerd</strong><br><span class="muted">Informatica e scienza nerd</span></div>
+    </a>
+    <a class="cat" href="#"><span class="icon">📌</span>
+      <div><strong>Pedagogia</strong><br><span class="muted">Benessere e organizzazione</span></div>
+    </a>
+    <a class="cat" href="#"><span class="icon">🧖‍♂️</span>
+      <div><strong>Biblioteconomia</strong><br><span class="muted">Biblioteca & studi di lettere</span></div>
+    </a>
+  </div>
+</section>
 
   <section class="container">
     <h3>Video della settimana</h3>
@@ -143,12 +165,24 @@
   </section>
 
   <section class="container" id="blog">
+    <section class="latest">
+  <div class="container">
     <h3>Ultimi articoli</h3>
     <div class="grid-posts">
-      <article class="post"><div class="thumb"></div><div class="body"><h4>10 idee per rendere la lettura divertente</h4><p class="muted">Suggerimenti pratici per coinvolgere la classe.</p><a class="btn" href="#">Leggi</a></div></article>
-      <article class="post"><div class="thumb"></div><div class="body"><h4>Come insegnare Dante oggi</h4><p class="muted">Approcci moderni per testi classici.</p><a class="btn" href="#">Leggi</a></div></article>
-      <article class="post"><div class="thumb"></div><div class="body"><h4>Laboratori di scrittura creativa</h4><p class="muted">Esercizi per liberare la fantasia.</p><a class="btn" href="#">Leggi</a></div></article>
+      {% assign latest_posts = site.posts | limit: 3 %}
+      {% for post in latest_posts %}
+      <article class="post">
+        <div class="thumb" style="background-image: url('{{ post.image | relative_url }}');"></div>
+        <div class="body">
+          <h4>{{ post.title }}</h4>
+          <p class="muted">{{ post.excerpt | strip_html | truncate: 100 }}</p>
+          <a class="btn" href="{{ post.url | relative_url }}">Leggi</a>
+        </div>
+      </article>
+      {% endfor %}
     </div>
+  </div>
+</section>
   </section>
 
   <section class="container" id="autori">
